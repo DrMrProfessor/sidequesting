@@ -14,20 +14,22 @@ const formattedDate = `${date.getFullYear()}.${String(date.getMonth() + 1).padSt
 ).padStart(2, '0')}`;
 ---
 
-<a href={href} class="post-card">
-	<div class="post-date">{formattedDate}</div>
-	<div class="post-title">{title}</div>
-	<div class="post-excerpt">{excerpt}</div>
-	{
-		tags.length > 0 && (
-			<div class="post-tags">
-				{tags.map((tag) => (
-					<span class="tag">{tag}</span>
-				))}
-			</div>
-		)
-	}
-</a>
+<article>
+	<a href={href} class="post-card">
+		<div class="post-date">{formattedDate}</div>
+		<div class="post-title">{title}</div>
+		<div class="post-excerpt">{excerpt}</div>
+		{
+			tags.length > 0 && (
+				<div class="post-tags">
+					{tags.map((tag) => (
+						<span class="tag">{tag}</span>
+					))}
+				</div>
+			)
+		}
+	</a>
+</article>
 
 <style>
 	.post-card {
