@@ -5,9 +5,7 @@
 	--cyan: #00f0ff;
 	--magenta: #ff2e97;
 	--text: #e4e4ec;
-	/* Lightened from #6a6a7a so normal-size text meets WCAG AA (4.5:1)
-	   against both --bg and --bg-panel; original was ~3.6:1. */
-	--text-dim: #8a8a9e;
+	--text-dim: #6a6a7a;
 	--grid-line: rgba(0, 240, 255, 0.04);
 	--font-display: 'Chakra Petch', sans-serif;
 	--font-mono: 'Share Tech Mono', monospace;
@@ -17,6 +15,15 @@
 }
 html {
 	color-scheme: dark;
+}
+/* Original --text-dim (~3.6:1) is below WCAG AA for body text, but it's
+   also a deliberate part of the moody, low-contrast terminal aesthetic.
+   Only raise it for people who've told their OS they need more contrast,
+   so the default look is untouched. */
+@media (prefers-contrast: more) {
+	:root {
+		--text-dim: #8a8a9e;
+	}
 }
 @media (prefers-reduced-motion: reduce) {
 	*,
