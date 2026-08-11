@@ -33,46 +33,51 @@ const bootLines = [
 		/>
 	</head>
 	<body>
+		<a href="#main-content" class="skip-link">Skip to main content</a>
 		<BootSequence lines={bootLines} />
 
 		<div id="main">
 			<div class="wrap">
-				<nav>
-					<a href="/" class="logo">side<span>questing</span>_</a>
-					<div class="nav-links">
-						<a href="/blog">Blog</a>
-						<a href="/about">About</a>
-					</div>
-				</nav>
+				<header>
+					<nav>
+						<a href="/" class="logo">side<span>questing</span>_</a>
+						<div class="nav-links">
+							<a href="/blog">Blog</a>
+							<a href="/about">About</a>
+						</div>
+					</nav>
+				</header>
 
-				<Hero
-					tag="SYSTEM ONLINE // DrMrProfessor"
-					titleLead="Side"
-					titleGlitch="quests"
-					titleTail="in "
-					titleAccent="cyber"
-					titleSuffix="."
-					description="Homelab tinkering, security learning notes, and whatever rabbit hole I've fallen down this week. Building in public, one broken config at a time."
-					primaryCta={{ label: 'Read the log', href: '/blog' }}
-					secondaryCta={{ label: 'What I’m building', href: '/about' }}
-				/>
+				<main id="main-content">
+					<Hero
+						tag="SYSTEM ONLINE // DrMrProfessor"
+						titleLead="Side"
+						titleGlitch="quests"
+						titleTail="in "
+						titleAccent="cyber"
+						titleSuffix="."
+						description="Homelab tinkering, security learning notes, and whatever rabbit hole I've fallen down this week. Building in public, one broken config at a time."
+						primaryCta={{ label: 'Read the log', href: '/blog' }}
+						secondaryCta={{ label: 'What I’m building', href: '/about' }}
+					/>
 
-				<section class="posts">
-					<div class="section-label">Recent transmissions</div>
-					<div class="post-grid">
-						{
-							posts.map((post) => (
-								<PostCard
-									href={`/blog/${post.id}/`}
-									date={post.data.pubDate}
-									title={post.data.title}
-									excerpt={post.data.description}
-									tags={post.data.tags}
-								/>
-							))
-						}
-					</div>
-				</section>
+					<section class="posts">
+						<div class="section-label">Recent transmissions</div>
+						<div class="post-grid">
+							{
+								posts.map((post) => (
+									<PostCard
+										href={`/blog/${post.id}/`}
+										date={post.data.pubDate}
+										title={post.data.title}
+										excerpt={post.data.description}
+										tags={post.data.tags}
+									/>
+								))
+							}
+						</div>
+					</section>
+				</main>
 
 				<footer>
 					<div>&copy; {new Date().getFullYear()} sidequesting // built with too much coffee</div>
@@ -165,6 +170,16 @@ const bootLines = [
 		max-width: 1100px;
 		margin: 0 auto;
 		padding: 0 clamp(1.5rem, 5vw, 3rem);
+	}
+
+	/* global.css sets a generic `main { width: 720px; ... }` rule for the
+	   prose pages; cancel it here so #main-content renders identically to
+	   the plain div it replaces instead of collapsing to 720px. */
+	main {
+		width: auto;
+		max-width: none;
+		margin: 0;
+		padding: 0;
 	}
 
 	nav {
