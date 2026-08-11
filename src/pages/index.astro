@@ -119,6 +119,13 @@ const bootLines = [
 	}
 
 	#main-content {
+		/* Undo global.css's generic `main { width: 720px; ... }` rule, written
+		   for the simple prose pages — this page's own .wrap div already
+		   handles width/centring/padding at the intended 1100px. */
+		width: auto;
+		max-width: none;
+		margin: 0;
+		padding: 0;
 		opacity: 0;
 		visibility: hidden;
 	}
