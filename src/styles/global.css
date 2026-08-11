@@ -1,31 +1,30 @@
-/*
-  The CSS in this style tag is based off of Bear Blog's default CSS.
-  https://github.com/HermanMartinus/bearblog/blob/297026a877bc2ab2b3bdfbd6b9f7961c350917dd/templates/styles/blog/default.css
-  License MIT: https://github.com/HermanMartinus/bearblog/blob/master/LICENSE.md
- */
-
 :root {
-	--accent: #2337ff;
-	--accent-dark: #000d8a;
-	--black: 15, 18, 25;
-	--gray: 96, 115, 159;
-	--gray-light: 229, 233, 240;
-	--gray-dark: 34, 41, 57;
-	--gray-gradient: rgba(var(--gray-light), 50%), #fff;
-	--box-shadow:
-		0 2px 6px rgba(var(--gray), 25%), 0 8px 24px rgba(var(--gray), 33%),
-		0 16px 32px rgba(var(--gray), 33%);
+	--bg: #0a0a0f;
+	--bg-panel: #101018;
+	--yellow: #fcee0a;
+	--cyan: #00f0ff;
+	--magenta: #ff2e97;
+	--text: #e4e4ec;
+	--text-dim: #6a6a7a;
+	--grid-line: rgba(0, 240, 255, 0.04);
+	--font-display: 'Chakra Petch', sans-serif;
+	--font-mono: 'Share Tech Mono', monospace;
+}
+* {
+	box-sizing: border-box;
+}
+html {
+	color-scheme: dark;
 }
 body {
-	font-family: var(--font-atkinson);
+	font-family: var(--font-display);
 	margin: 0;
 	padding: 0;
 	text-align: left;
-	background: linear-gradient(var(--gray-gradient)) no-repeat;
-	background-size: 100% 600px;
+	background: var(--bg);
 	word-wrap: break-word;
 	overflow-wrap: break-word;
-	color: rgb(var(--gray-dark));
+	color: var(--text);
 	font-size: 20px;
 	line-height: 1.7;
 }
@@ -42,8 +41,9 @@ h4,
 h5,
 h6 {
 	margin: 0 0 0.5rem 0;
-	color: rgb(var(--black));
+	color: var(--text);
 	line-height: 1.2;
+	font-weight: 600;
 }
 h1 {
 	font-size: 3.052em;
@@ -65,10 +65,10 @@ b {
 	font-weight: 700;
 }
 a {
-	color: var(--accent);
+	color: var(--cyan);
 }
 a:hover {
-	color: var(--accent);
+	color: var(--yellow);
 }
 p {
 	margin-bottom: 1em;
@@ -93,25 +93,30 @@ img {
 }
 code {
 	padding: 2px 5px;
-	background-color: rgb(var(--gray-light));
+	font-family: var(--font-mono);
+	background-color: var(--bg-panel);
+	border: 1px solid rgba(255, 255, 255, 0.08);
 	border-radius: 2px;
 }
 pre {
 	padding: 1.5em;
 	border-radius: 8px;
+	background-color: var(--bg-panel);
+	border: 1px solid rgba(255, 255, 255, 0.08);
 }
 pre > code {
 	all: unset;
 }
 blockquote {
-	border-left: 4px solid var(--accent);
+	border-left: 4px solid var(--cyan);
 	padding: 0 0 0 20px;
 	margin: 0;
 	font-size: 1.333em;
+	color: var(--text-dim);
 }
 hr {
 	border: none;
-	border-top: 1px solid rgb(var(--gray-light));
+	border-top: 1px solid rgba(255, 255, 255, 0.08);
 }
 @media (max-width: 720px) {
 	body {

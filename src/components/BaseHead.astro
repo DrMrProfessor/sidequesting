@@ -34,6 +34,14 @@ const { title, description, image = FallbackImage } = Astro.props;
 
 <Font cssVariable="--font-atkinson" preload />
 
+<!-- Site fonts (Chakra Petch / Share Tech Mono) -->
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link
+	href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;500;600;700&family=Share+Tech+Mono&display=swap"
+	rel="stylesheet"
+/>
+
 <!-- Canonical URL -->
 <link rel="canonical" href={canonicalURL} />
 
