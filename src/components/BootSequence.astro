@@ -1,0 +1,190 @@
+---
+interface BootLine {
+	text: string;
+	delay?: number;
+	tone?: 'ok' | 'warn';
+}
+
+interface Props {
+	lines: BootLine[];
+	storageKey?: string;
+}
+
+const { lines, storageKey = 'sidequesting-boot-seen' } = Astro.props;
+
+const linesForClient = lines.map((line) => ({
+	html:
+		line.tone === 'ok'
+			? `[<span class="ok">OK</span>] ${line.text}`
+			: line.tone === 'warn'
+				? `[<span class="warn">!!</span>] ${line.text}`
+				: line.text,
+	delay: line.delay ?? 250,
+}));
+---
+
+<script is:inline define:vars={{ storageKey }}>
+	if (localStorage.getItem(storageKey)) {
+		document.documentElement.classList.add('boot-skip');
+	}
+</script>
+
+<div id="boot"></div>
+
+<button id="replay-boot" class="replay" aria-label="Replay boot sequence">↻ Replay boot</button>
+
+<style>
+	:global(html.boot-skip) #boot {
+		opacity: 0;
+		visibility: hidden;
+		animation: none;
+	}
+	:global(html.boot-skip) :global(#main) {
+		opacity: 1;
+		animation: none;
+	}
+
+	#boot {
+		position: fixed;
+		inset: 0;
+		background: var(--bg);
+		z-index: 100;
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		padding: 2rem clamp(1.5rem, 8vw, 12rem);
+		font-family: var(--font-mono);
+		font-size: clamp(0.8rem, 2vw, 1rem);
+		line-height: 1.9;
+		color: var(--cyan);
+	}
+	#boot.done {
+		animation: bootOut 0.5s ease forwards;
+	}
+	@keyframes bootOut {
+		to {
+			opacity: 0;
+			visibility: hidden;
+		}
+	}
+
+	#boot :global(.boot-line) {
+		opacity: 0;
+		white-space: pre-wrap;
+	}
+	#boot :global(.boot-line.show) {
+		opacity: 1;
+	}
+	#boot :global(.ok) {
+		color: var(--yellow);
+	}
+	#boot :global(.warn) {
+		color: var(--magenta);
+	}
+	#boot :global(.boot-cursor) {
+		display: inline-block;
+		width: 0.6em;
+		height: 1.1em;
+		background: var(--yellow);
+		vertical-align: middle;
+		animation: blink 1s steps(1) infinite;
+	}
+	@keyframes blink {
+		50% {
+			opacity: 0;
+		}
+	}
+
+	.replay {
+		position: fixed;
+		bottom: 1rem;
+		right: 1rem;
+		z-index: 50;
+		font-family: var(--font-mono);
+		font-size: 0.75rem;
+		background: var(--bg-panel);
+		border: 1px solid var(--text-dim);
+		color: var(--text-dim);
+		padding: 0.5rem 0.9rem;
+		cursor: pointer;
+		text-transform: uppercase;
+		letter-spacing: 0.08em;
+	}
+	.replay:hover {
+		border-color: var(--yellow);
+		color: var(--yellow);
+	}
+</style>
+
+<script define:vars={{ linesForClient, storageKey }}>
+	function typeLine(el, html) {
+		return new Promise((resolve) => {
+			if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+				el.innerHTML = html;
+				el.classList.add('show');
+				resolve();
+				return;
+			}
+			el.classList.add('show');
+			const tmp = document.createElement('div');
+			tmp.innerHTML = html;
+			const text = tmp.textContent ?? '';
+			let i = 0;
+			const cursor = '<span class="boot-cursor"></span>';
+			const iv = setInterval(() => {
+				el.innerHTML = text.slice(0, i) + cursor;
+				i++;
+				if (i > text.length) {
+					clearInterval(iv);
+					el.innerHTML = html;
+					resolve();
+				}
+			}, 14);
+		});
+	}
+
+	async function runBoot() {
+		const boot = document.getElementById('boot');
+		const main = document.getElementById('main');
+		if (!boot || !main) return;
+
+		document.documentElement.classList.remove('boot-skip');
+		boot.classList.remove('done');
+		boot.style.visibility = 'visible';
+		boot.style.opacity = '1';
+		boot.innerHTML = '';
+		main.classList.remove('reveal');
+		main.style.opacity = '0';
+
+		for (const line of linesForClient) {
+			const el = document.createElement('div');
+			el.className = 'boot-line';
+			boot.appendChild(el);
+			await typeLine(el, line.html);
+			await new Promise((r) => setTimeout(r, line.delay));
+		}
+		await new Promise((r) => setTimeout(r, 500));
+		boot.classList.add('done');
+		boot.style.removeProperty('visibility');
+		boot.style.removeProperty('opacity');
+		setTimeout(() => {
+			main.classList.add('reveal');
+			main.style.removeProperty('opacity');
+		}, 300);
+
+		localStorage.setItem(storageKey, '1');
+	}
+
+	function init() {
+		if (!localStorage.getItem(storageKey)) {
+			runBoot();
+		}
+		document.getElementById('replay-boot')?.addEventListener('click', runBoot);
+	}
+
+	if (document.readyState === 'loading') {
+		document.addEventListener('DOMContentLoaded', init);
+	} else {
+		init();
+	}
+</script>

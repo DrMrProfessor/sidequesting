@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>sidequesting</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;500;600;700&family=Share+Tech+Mono&display=swap');
+
+  :root {
+    --bg: #0a0a0f;
+    --bg-panel: #101018;
+    --yellow: #fcee0a;
+    --cyan: #00f0ff;
+    --magenta: #ff2e97;
+    --text: #e4e4ec;
+    --text-dim: #6a6a7a;
+    --grid-line: rgba(0, 240, 255, 0.04);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation: none !important; transition: none !important; }
+  }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Chakra Petch', sans-serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+    background-image:
+      linear-gradient(var(--grid-line) 1px, transparent 1px),
+      linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+    background-size: 40px 40px;
+  }
+
+  /* scanline overlay */
+  body::after {
+    content: "";
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    background: repeating-linear-gradient(
+      to bottom,
+      transparent 0,
+      transparent 2px,
+      rgba(0,0,0,0.15) 3px,
+      transparent 4px
+    );
+    z-index: 9999;
+    opacity: 0.4;
+  }
+
+  /* ---------- BOOT SEQUENCE ---------- */
+  #boot {
+    position: fixed;
+    inset: 0;
+    background: var(--bg);
+    z-index: 100;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 2rem clamp(1.5rem, 8vw, 12rem);
+    font-family: 'Share Tech Mono', monospace;
+    font-size: clamp(0.8rem, 2vw, 1rem);
+    line-height: 1.9;
+    color: var(--cyan);
+  }
+  #boot.done { animation: bootOut 0.5s ease forwards; }
+  @keyframes bootOut { to { opacity: 0; visibility: hidden; } }
+
+  .boot-line { opacity: 0; white-space: pre-wrap; }
+  .boot-line.show { opacity: 1; }
+  .boot-line .ok { color: var(--yellow); }
+  .boot-line .warn { color: var(--magenta); }
+  .boot-cursor {
+    display: inline-block;
+    width: 0.6em; height: 1.1em;
+    background: var(--yellow);
+    vertical-align: middle;
+    animation: blink 1s steps(1) infinite;
+  }
+  @keyframes blink { 50% { opacity: 0; } }
+
+  /* ---------- MAIN ---------- */
+  #main { opacity: 0; }
+  #main.reveal { animation: fadeUp 0.8s ease forwards; }
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: none; } }
+
+  .wrap { max-width: 1100px; margin: 0 auto; padding: 0 clamp(1.5rem, 5vw, 3rem); }
+
+  /* nav */
+  nav {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 1.5rem 0; border-bottom: 1px solid rgba(255,255,255,0.06);
+  }
+  .logo {
+    font-weight: 700; font-size: 1.1rem; letter-spacing: 0.05em;
+    color: var(--text);
+  }
+  .logo span { color: var(--yellow); }
+  .nav-links { display: flex; gap: 2rem; font-size: 0.85rem; letter-spacing: 0.08em; text-transform: uppercase; }
+  .nav-links a { color: var(--text-dim); text-decoration: none; transition: color 0.2s; }
+  .nav-links a:hover { color: var(--cyan); }
+
+  /* hero */
+  .hero { padding: clamp(4rem, 12vh, 9rem) 0 clamp(3rem, 8vh, 6rem); }
+  .hero-tag {
+    font-family: 'Share Tech Mono', monospace;
+    color: var(--cyan); font-size: 0.85rem; letter-spacing: 0.15em;
+    margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.6rem;
+  }
+  .hero-tag::before { content: ""; width: 28px; height: 1px; background: var(--cyan); }
+  .hero h1 {
+    font-size: clamp(2.8rem, 9vw, 6rem); font-weight: 700;
+    line-height: 0.95; letter-spacing: -0.02em; text-transform: uppercase;
+    position: relative;
+  }
+  .hero h1 .accent { color: var(--yellow); }
+  .glitch { position: relative; display: inline-block; }
+  .glitch::before, .glitch::after {
+    content: attr(data-text); position: absolute; inset: 0;
+    clip-path: inset(0 0 0 0);
+  }
+  .glitch::before { color: var(--magenta); animation: glitchA 3.5s infinite steps(1); left: 2px; }
+  .glitch::after { color: var(--cyan); animation: glitchB 3.5s infinite steps(1); left: -2px; }
+  @keyframes glitchA {
+    0%,92%,100% { opacity: 0; } 93% { opacity: 0.8; clip-path: inset(20% 0 60% 0); }
+    95% { opacity: 0.8; clip-path: inset(70% 0 10% 0); } 97% { opacity: 0; }
+  }
+  @keyframes glitchB {
+    0%,90%,100% { opacity: 0; } 91% { opacity: 0.8; clip-path: inset(60% 0 20% 0); }
+    94% { opacity: 0.8; clip-path: inset(10% 0 75% 0); } 96% { opacity: 0; }
+  }
+  .hero p {
+    margin-top: 2rem; max-width: 46ch; font-size: clamp(1rem, 2.5vw, 1.2rem);
+    color: var(--text-dim); line-height: 1.6;
+  }
+  .hero-cta { margin-top: 2.5rem; display: flex; gap: 1rem; flex-wrap: wrap; }
+  .btn {
+    font-family: 'Share Tech Mono', monospace; font-size: 0.9rem;
+    text-transform: uppercase; letter-spacing: 0.1em; text-decoration: none;
+    padding: 0.85rem 1.6rem; position: relative; transition: all 0.2s;
+    clip-path: polygon(0 0, 100% 0, 100% 70%, 92% 100%, 0 100%);
+  }
+  .btn-primary { background: var(--yellow); color: #000; font-weight: 600; }
+  .btn-primary:hover { background: #fff; }
+  .btn-ghost { border: 1px solid var(--text-dim); color: var(--text); }
+  .btn-ghost:hover { border-color: var(--cyan); color: var(--cyan); }
+
+  /* posts */
+  .posts { padding: 2rem 0 6rem; }
+  .section-label {
+    font-family: 'Share Tech Mono', monospace; color: var(--yellow);
+    font-size: 0.8rem; letter-spacing: 0.2em; text-transform: uppercase;
+    margin-bottom: 2rem; display: flex; align-items: center; gap: 1rem;
+  }
+  .section-label::after { content: ""; flex: 1; height: 1px; background: rgba(255,255,255,0.08); }
+  .post-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1.5rem; }
+  .post-card {
+    background: var(--bg-panel); padding: 1.8rem;
+    border: 1px solid rgba(255,255,255,0.06);
+    clip-path: polygon(0 0, 100% 0, 100% 88%, 94% 100%, 0 100%);
+    transition: all 0.25s; cursor: pointer; position: relative;
+  }
+  .post-card:hover { border-color: var(--cyan); transform: translateY(-4px); }
+  .post-card:hover .post-title { color: var(--cyan); }
+  .post-date {
+    font-family: 'Share Tech Mono', monospace; color: var(--magenta);
+    font-size: 0.75rem; letter-spacing: 0.1em; margin-bottom: 0.8rem;
+  }
+  .post-title { font-size: 1.25rem; font-weight: 600; margin-bottom: 0.6rem; transition: color 0.2s; }
+  .post-excerpt { color: var(--text-dim); font-size: 0.9rem; line-height: 1.5; }
+  .post-tags { margin-top: 1rem; display: flex; gap: 0.5rem; flex-wrap: wrap; }
+  .tag {
+    font-family: 'Share Tech Mono', monospace; font-size: 0.7rem;
+    color: var(--text-dim); border: 1px solid rgba(255,255,255,0.1);
+    padding: 0.15rem 0.5rem; text-transform: uppercase; letter-spacing: 0.05em;
+  }
+
+  footer {
+    border-top: 1px solid rgba(255,255,255,0.06); padding: 2rem 0;
+    font-family: 'Share Tech Mono', monospace; font-size: 0.8rem;
+    color: var(--text-dim); display: flex; justify-content: space-between; flex-wrap: wrap; gap: 1rem;
+  }
+  footer a { color: var(--text-dim); text-decoration: none; }
+  footer a:hover { color: var(--yellow); }
+
+  .replay {
+    position: fixed; bottom: 1rem; right: 1rem; z-index: 50;
+    font-family: 'Share Tech Mono', monospace; font-size: 0.75rem;
+    background: var(--bg-panel); border: 1px solid var(--text-dim);
+    color: var(--text-dim); padding: 0.5rem 0.9rem; cursor: pointer;
+    text-transform: uppercase; letter-spacing: 0.08em;
+  }
+  .replay:hover { border-color: var(--yellow); color: var(--yellow); }
+</style>
+</head>
+<body>
+
+<div id="boot"></div>
+
+<div id="main">
+  <div class="wrap">
+    <nav>
+      <div class="logo">side<span>questing</span>_</div>
+      <div class="nav-links">
+        <a href="#">Blog</a>
+        <a href="#">Projects</a>
+        <a href="#">About</a>
+      </div>
+    </nav>
+
+    <section class="hero">
+      <div class="hero-tag">SYSTEM ONLINE // DrMrProfessor</div>
+      <h1>Side<span class="glitch accent" data-text="quests">quests</span><br>in <span class="accent">cyber</span>.</h1>
+      <p>Homelab tinkering, security learning notes, and whatever rabbit hole I've fallen down this week. Building in public, one broken config at a time.</p>
+      <div class="hero-cta">
+        <a href="#" class="btn btn-primary">Read the log</a>
+        <a href="#" class="btn btn-ghost">What I'm building</a>
+      </div>
+    </section>
+
+    <section class="posts">
+      <div class="section-label">Recent transmissions</div>
+      <div class="post-grid">
+        <article class="post-card">
+          <div class="post-date">2026.08.10</div>
+          <div class="post-title">Fighting WireGuard on a locked-down NAS</div>
+          <div class="post-excerpt">DSM 6.2 doesn't ship the kernel module WireGuard needs. Here's the workaround, and why the "easy" path was a dead end.</div>
+          <div class="post-tags"><span class="tag">homelab</span><span class="tag">vpn</span><span class="tag">networking</span></div>
+        </article>
+        <article class="post-card">
+          <div class="post-date">2026.08.03</div>
+          <div class="post-title">Learning subnetting for real this time</div>
+          <div class="post-excerpt">Every tutorial made it worse until I stopped memorising and started drawing. Notes from finally getting it to click.</div>
+          <div class="post-tags"><span class="tag">networking</span><span class="tag">study</span></div>
+        </article>
+        <article class="post-card">
+          <div class="post-date">2026.07.28</div>
+          <div class="post-title">A QR code that teaches you not to scan it</div>
+          <div class="post-excerpt">Building a benign "quishing" awareness demo — a sticker that counts scans and makes you think twice.</div>
+          <div class="post-tags"><span class="tag">security</span><span class="tag">awareness</span></div>
+        </article>
+      </div>
+    </section>
+
+    <footer>
+      <div>© 2026 sidequesting // built with too much coffee</div>
+      <div><a href="#">GitHub</a> · <a href="#">Instagram</a> · <a href="#">RSS</a></div>
+    </footer>
+  </div>
+</div>
+
+<button class="replay" onclick="runBoot()">↻ Replay boot</button>
+
+<script>
+  const bootLines = [
+    { t: 'sidequesting_os v2.077 — initialising...', d: 300 },
+    { t: '[<span class="ok">OK</span>] mounting /dev/curiosity', d: 250 },
+    { t: '[<span class="ok">OK</span>] loading homelab modules ......... 12 services up', d: 250 },
+    { t: '[<span class="ok">OK</span>] establishing tunnel → cloudflare', d: 250 },
+    { t: '[<span class="warn">!!</span>] caffeine levels: CRITICAL', d: 300 },
+    { t: '[<span class="ok">OK</span>] identity confirmed: DrMrProfessor', d: 250 },
+    { t: 'boot complete. welcome back.', d: 400 },
+  ];
+
+  function typeLine(el, html) {
+    return new Promise(res => {
+      // reduced motion: show instantly
+      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        el.innerHTML = html; el.classList.add('show'); res(); return;
+      }
+      el.classList.add('show');
+      // strip tags for typing, then swap to full html
+      const tmp = document.createElement('div'); tmp.innerHTML = html;
+      const text = tmp.textContent;
+      let i = 0;
+      const cursor = '<span class="boot-cursor"></span>';
+      const iv = setInterval(() => {
+        el.innerHTML = text.slice(0, i) + cursor;
+        i++;
+        if (i > text.length) { clearInterval(iv); el.innerHTML = html; res(); }
+      }, 14);
+    });
+  }
+
+  async function runBoot() {
+    const boot = document.getElementById('boot');
+    const main = document.getElementById('main');
+    boot.classList.remove('done'); boot.style.visibility = 'visible'; boot.style.opacity = '1';
+    boot.innerHTML = '';
+    main.classList.remove('reveal'); main.style.opacity = '0';
+
+    for (const line of bootLines) {
+      const el = document.createElement('div');
+      el.className = 'boot-line';
+      boot.appendChild(el);
+      await typeLine(el, line.t);
+      await new Promise(r => setTimeout(r, line.d));
+    }
+    await new Promise(r => setTimeout(r, 500));
+    boot.classList.add('done');
+    setTimeout(() => { main.classList.add('reveal'); }, 300);
+  }
+
+  runBoot();
+</script>
+</body>
+</html>

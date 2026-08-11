@@ -1,0 +1,85 @@
+---
+interface Props {
+	href: string;
+	date: Date;
+	title: string;
+	excerpt: string;
+	tags?: string[];
+}
+
+const { href, date, title, excerpt, tags = [] } = Astro.props;
+
+const formattedDate = `${date.getFullYear()}.${String(date.getMonth() + 1).padStart(2, '0')}.${String(
+	date.getDate(),
+).padStart(2, '0')}`;
+---
+
+<a href={href} class="post-card">
+	<div class="post-date">{formattedDate}</div>
+	<div class="post-title">{title}</div>
+	<div class="post-excerpt">{excerpt}</div>
+	{
+		tags.length > 0 && (
+			<div class="post-tags">
+				{tags.map((tag) => (
+					<span class="tag">{tag}</span>
+				))}
+			</div>
+		)
+	}
+</a>
+
+<style>
+	.post-card {
+		display: block;
+		background: var(--bg-panel);
+		padding: 1.8rem;
+		border: 1px solid rgba(255, 255, 255, 0.06);
+		clip-path: polygon(0 0, 100% 0, 100% 88%, 94% 100%, 0 100%);
+		transition: all 0.25s;
+		cursor: pointer;
+		position: relative;
+		text-decoration: none;
+		color: inherit;
+	}
+	.post-card:hover {
+		border-color: var(--cyan);
+		transform: translateY(-4px);
+	}
+	.post-card:hover .post-title {
+		color: var(--cyan);
+	}
+	.post-date {
+		font-family: var(--font-mono);
+		color: var(--magenta);
+		font-size: 0.75rem;
+		letter-spacing: 0.1em;
+		margin-bottom: 0.8rem;
+	}
+	.post-title {
+		font-size: 1.25rem;
+		font-weight: 600;
+		margin-bottom: 0.6rem;
+		transition: color 0.2s;
+	}
+	.post-excerpt {
+		color: var(--text-dim);
+		font-size: 0.9rem;
+		line-height: 1.5;
+	}
+	.post-tags {
+		margin-top: 1rem;
+		display: flex;
+		gap: 0.5rem;
+		flex-wrap: wrap;
+	}
+	.tag {
+		font-family: var(--font-mono);
+		font-size: 0.7rem;
+		color: var(--text-dim);
+		border: 1px solid rgba(255, 255, 255, 0.1);
+		padding: 0.15rem 0.5rem;
+		text-transform: uppercase;
+		letter-spacing: 0.05em;
+	}
+</style>

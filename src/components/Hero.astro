@@ -1,0 +1,170 @@
+---
+interface Props {
+	tag: string;
+	titleLead: string;
+	titleGlitch: string;
+	titleTail?: string;
+	titleAccent?: string;
+	titleSuffix?: string;
+	description: string;
+	primaryCta: { label: string; href: string };
+	secondaryCta: { label: string; href: string };
+}
+
+const {
+	tag,
+	titleLead,
+	titleGlitch,
+	titleTail,
+	titleAccent,
+	titleSuffix,
+	description,
+	primaryCta,
+	secondaryCta,
+} = Astro.props;
+---
+
+<section class="hero">
+	<div class="hero-tag">{tag}</div>
+	<h1>
+		{titleLead}<span class="glitch accent" data-text={titleGlitch}>{titleGlitch}</span>
+		{titleTail && <br />}
+		{titleTail}{titleAccent && <span class="accent">{titleAccent}</span>}{titleSuffix}
+	</h1>
+	<p>{description}</p>
+	<div class="hero-cta">
+		<a href={primaryCta.href} class="btn btn-primary">{primaryCta.label}</a>
+		<a href={secondaryCta.href} class="btn btn-ghost">{secondaryCta.label}</a>
+	</div>
+</section>
+
+<style>
+	.hero {
+		padding: clamp(4rem, 12vh, 9rem) 0 clamp(3rem, 8vh, 6rem);
+	}
+	.hero-tag {
+		font-family: var(--font-mono);
+		color: var(--cyan);
+		font-size: 0.85rem;
+		letter-spacing: 0.15em;
+		margin-bottom: 1.5rem;
+		display: flex;
+		align-items: center;
+		gap: 0.6rem;
+	}
+	.hero-tag::before {
+		content: '';
+		width: 28px;
+		height: 1px;
+		background: var(--cyan);
+	}
+	.hero h1 {
+		font-size: clamp(2.8rem, 9vw, 6rem);
+		font-weight: 700;
+		line-height: 0.95;
+		letter-spacing: -0.02em;
+		text-transform: uppercase;
+		position: relative;
+		margin: 0;
+	}
+	.hero h1 .accent {
+		color: var(--yellow);
+	}
+	.glitch {
+		position: relative;
+		display: inline-block;
+	}
+	.glitch::before,
+	.glitch::after {
+		content: attr(data-text);
+		position: absolute;
+		inset: 0;
+		clip-path: inset(0 0 0 0);
+	}
+	.glitch::before {
+		color: var(--magenta);
+		animation: glitchA 3.5s infinite steps(1);
+		left: 2px;
+	}
+	.glitch::after {
+		color: var(--cyan);
+		animation: glitchB 3.5s infinite steps(1);
+		left: -2px;
+	}
+	@keyframes glitchA {
+		0%,
+		92%,
+		100% {
+			opacity: 0;
+		}
+		93% {
+			opacity: 0.8;
+			clip-path: inset(20% 0 60% 0);
+		}
+		95% {
+			opacity: 0.8;
+			clip-path: inset(70% 0 10% 0);
+		}
+		97% {
+			opacity: 0;
+		}
+	}
+	@keyframes glitchB {
+		0%,
+		90%,
+		100% {
+			opacity: 0;
+		}
+		91% {
+			opacity: 0.8;
+			clip-path: inset(60% 0 20% 0);
+		}
+		94% {
+			opacity: 0.8;
+			clip-path: inset(10% 0 75% 0);
+		}
+		96% {
+			opacity: 0;
+		}
+	}
+	.hero p {
+		margin-top: 2rem;
+		max-width: 46ch;
+		font-size: clamp(1rem, 2.5vw, 1.2rem);
+		color: var(--text-dim);
+		line-height: 1.6;
+	}
+	.hero-cta {
+		margin-top: 2.5rem;
+		display: flex;
+		gap: 1rem;
+		flex-wrap: wrap;
+	}
+	.btn {
+		font-family: var(--font-mono);
+		font-size: 0.9rem;
+		text-transform: uppercase;
+		letter-spacing: 0.1em;
+		text-decoration: none;
+		padding: 0.85rem 1.6rem;
+		position: relative;
+		transition: all 0.2s;
+		clip-path: polygon(0 0, 100% 0, 100% 70%, 92% 100%, 0 100%);
+	}
+	.btn-primary {
+		background: var(--yellow);
+		color: #000;
+		font-weight: 600;
+	}
+	.btn-primary:hover {
+		background: #fff;
+	}
+	.btn-ghost {
+		border: 1px solid var(--text-dim);
+		color: var(--text);
+	}
+	.btn-ghost:hover {
+		border-color: var(--cyan);
+		color: var(--cyan);
+	}
+</style>
