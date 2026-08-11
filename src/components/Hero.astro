@@ -80,6 +80,10 @@ const {
 		position: absolute;
 		inset: 0;
 		clip-path: inset(0 0 0 0);
+		/* Resting state for when the animation is shortened/removed under
+		   prefers-reduced-motion — without this the layers default to fully
+		   opaque instead of the keyframes' 0%/100% hidden state. */
+		opacity: 0;
 	}
 	.glitch::before {
 		color: var(--magenta);
@@ -166,5 +170,12 @@ const {
 	.btn-ghost:hover {
 		border-color: var(--cyan);
 		color: var(--cyan);
+	}
+	/* clip-path clips the default focus outline along with the box shape,
+	   so drop the clip on focus to guarantee a visible, unclipped ring. */
+	.btn:focus-visible {
+		clip-path: none;
+		outline: 3px solid var(--cyan);
+		outline-offset: 2px;
 	}
 </style>

@@ -29,9 +29,25 @@ const linesForClient = lines.map((line) => ({
 	}
 </script>
 
-<div id="boot"></div>
+<div id="boot" aria-hidden="true"></div>
 
 <button id="replay-boot" class="replay" aria-label="Replay boot sequence">↻ Replay boot</button>
+
+<noscript>
+	<style>
+		/* Without JS, #boot never gets populated or dismissed and #main-content
+		   never gets its 'reveal' class — both would otherwise stay hidden from
+		   everyone, including screen reader users, forever. */
+		#boot,
+		#replay-boot {
+			display: none !important;
+		}
+		#main-content {
+			opacity: 1 !important;
+			visibility: visible !important;
+		}
+	</style>
+</noscript>
 
 <style>
 	:global(html.boot-skip) #boot {
@@ -39,8 +55,9 @@ const linesForClient = lines.map((line) => ({
 		visibility: hidden;
 		animation: none;
 	}
-	:global(html.boot-skip) :global(#main) {
+	:global(html.boot-skip) :global(#main-content) {
 		opacity: 1;
+		visibility: visible;
 		animation: none;
 	}
 
@@ -145,8 +162,10 @@ const linesForClient = lines.map((line) => ({
 
 	async function runBoot() {
 		const boot = document.getElementById('boot');
-		const main = document.getElementById('main');
+		const main = document.getElementById('main-content');
 		if (!boot || !main) return;
+
+		const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
 		document.documentElement.classList.remove('boot-skip');
 		boot.classList.remove('done');
@@ -155,22 +174,29 @@ const linesForClient = lines.map((line) => ({
 		boot.innerHTML = '';
 		main.classList.remove('reveal');
 		main.style.opacity = '0';
+		main.style.visibility = 'hidden';
 
 		for (const line of linesForClient) {
 			const el = document.createElement('div');
 			el.className = 'boot-line';
 			boot.appendChild(el);
 			await typeLine(el, line.html);
-			await new Promise((r) => setTimeout(r, line.delay));
+			// The typing effect is already skipped under reduced motion; skip the
+			// between-line pacing too so it doesn't become dead waiting time.
+			if (!reduced) await new Promise((r) => setTimeout(r, line.delay));
 		}
-		await new Promise((r) => setTimeout(r, 500));
+		if (!reduced) await new Promise((r) => setTimeout(r, 500));
 		boot.classList.add('done');
 		boot.style.removeProperty('visibility');
 		boot.style.removeProperty('opacity');
-		setTimeout(() => {
-			main.classList.add('reveal');
-			main.style.removeProperty('opacity');
-		}, 300);
+		setTimeout(
+			() => {
+				main.classList.add('reveal');
+				main.style.removeProperty('opacity');
+				main.style.removeProperty('visibility');
+			},
+			reduced ? 0 : 300,
+		);
 
 		localStorage.setItem(storageKey, '1');
 	}

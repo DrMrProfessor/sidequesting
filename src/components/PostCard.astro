@@ -49,6 +49,13 @@ const formattedDate = `${date.getFullYear()}.${String(date.getMonth() + 1).padSt
 	.post-card:hover .post-title {
 		color: var(--cyan);
 	}
+	/* clip-path clips the default focus outline along with the box shape,
+	   so drop the clip on focus to guarantee a visible, unclipped ring. */
+	.post-card:focus-visible {
+		clip-path: none;
+		outline: 3px solid var(--cyan);
+		outline-offset: 2px;
+	}
 	.post-date {
 		font-family: var(--font-mono);
 		color: var(--magenta);

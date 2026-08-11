@@ -5,7 +5,9 @@
 	--cyan: #00f0ff;
 	--magenta: #ff2e97;
 	--text: #e4e4ec;
-	--text-dim: #6a6a7a;
+	/* Lightened from #6a6a7a so normal-size text meets WCAG AA (4.5:1)
+	   against both --bg and --bg-panel; original was ~3.6:1. */
+	--text-dim: #8a8a9e;
 	--grid-line: rgba(0, 240, 255, 0.04);
 	--font-display: 'Chakra Petch', sans-serif;
 	--font-mono: 'Share Tech Mono', monospace;
@@ -15,6 +17,33 @@
 }
 html {
 	color-scheme: dark;
+}
+@media (prefers-reduced-motion: reduce) {
+	*,
+	*::before,
+	*::after {
+		animation-duration: 0.001ms !important;
+		animation-iteration-count: 1 !important;
+		transition-duration: 0.001ms !important;
+		scroll-behavior: auto !important;
+	}
+}
+.skip-link {
+	position: absolute;
+	top: -3rem;
+	left: 1rem;
+	z-index: 1000;
+	background: var(--yellow);
+	color: #000;
+	font-family: var(--font-mono);
+	font-size: 0.9rem;
+	font-weight: 600;
+	padding: 0.75rem 1.25rem;
+	text-decoration: none;
+	transition: top 0.15s ease;
+}
+.skip-link:focus {
+	top: 1rem;
 }
 body {
 	font-family: var(--font-display);
