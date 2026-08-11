@@ -22,18 +22,22 @@ const bootLines = [
 ---
 
 <!doctype html>
-<html lang="en-AU">
+<html lang="en">
 	<head>
 		<BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} />
+		<link rel="preconnect" href="https://fonts.googleapis.com" />
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+		<link
+			href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;500;600;700&family=Share+Tech+Mono&display=swap"
+			rel="stylesheet"
+		/>
 	</head>
 	<body>
-		<a href="#main-content" class="skip-link">Skip to main content</a>
-
 		<BootSequence lines={bootLines} />
 
-		<main id="main-content">
+		<div id="main">
 			<div class="wrap">
-				<nav aria-label="Primary">
+				<nav>
 					<a href="/" class="logo">side<span>questing</span>_</a>
 					<div class="nav-links">
 						<a href="/blog">Blog</a>
@@ -54,7 +58,7 @@ const bootLines = [
 				/>
 
 				<section class="posts">
-					<h2 class="section-label">Recent transmissions</h2>
+					<div class="section-label">Recent transmissions</div>
 					<div class="post-grid">
 						{
 							posts.map((post) => (
@@ -75,15 +79,37 @@ const bootLines = [
 					<div><a href="#">GitHub</a> &middot; <a href="#">Instagram</a> &middot; <a href="/rss.xml">RSS</a></div>
 				</footer>
 			</div>
-		</main>
+		</div>
 	</body>
 </html>
 
 <style>
+	:root {
+		--bg: #0a0a0f;
+		--bg-panel: #101018;
+		--yellow: #fcee0a;
+		--cyan: #00f0ff;
+		--magenta: #ff2e97;
+		--text: #e4e4ec;
+		--text-dim: #6a6a7a;
+		--grid-line: rgba(0, 240, 255, 0.04);
+		--font-display: 'Chakra Petch', sans-serif;
+		--font-mono: 'Share Tech Mono', monospace;
+	}
+
 	:global(*) {
 		margin: 0;
 		padding: 0;
 		box-sizing: border-box;
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		:global(*),
+		:global(*::before),
+		:global(*::after) {
+			animation: none !important;
+			transition: none !important;
+		}
 	}
 
 	html {
@@ -118,20 +144,11 @@ const bootLines = [
 		opacity: 0.4;
 	}
 
-	#main-content {
-		/* Undo global.css's generic `main { width: 720px; ... }` rule, written
-		   for the simple prose pages — this page's own .wrap div already
-		   handles width/centring/padding at the intended 1100px. */
-		width: auto;
-		max-width: none;
-		margin: 0;
-		padding: 0;
+	#main {
 		opacity: 0;
-		visibility: hidden;
 	}
-	#main-content.reveal {
+	#main.reveal {
 		animation: fadeUp 0.8s ease forwards;
-		visibility: visible;
 	}
 	@keyframes fadeUp {
 		from {
@@ -188,7 +205,6 @@ const bootLines = [
 	}
 	.section-label {
 		font-family: var(--font-mono);
-		font-weight: 400;
 		color: var(--yellow);
 		font-size: 0.8rem;
 		letter-spacing: 0.2em;
