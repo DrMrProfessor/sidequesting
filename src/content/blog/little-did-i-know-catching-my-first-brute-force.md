@@ -10,6 +10,8 @@ That was all I had. No password, no username worth trusting, no idea what was be
 
 So I did the unsubtle thing. I pointed myself at the login and started guessing — name after name, straight down the list, the terminal throwing the same rejection back at me each time. _Permission denied._ Again. _Permission denied._ Again.
 
+![Terminal showing repeated SSH permission denied responses during the brute-force attempt](../../assets/blog/first-brute-force/attacker_attempt.png)
+
 Twenty-nine tries in, I stopped. The box wasn't giving. Whatever was on it would stay a mystery. No harm done — just another server that didn't feel like talking. I closed the terminal and moved on.
 
 ---
