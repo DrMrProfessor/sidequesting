@@ -59,6 +59,77 @@ const { title, description, pubDate, updatedDate, heroImage } = Astro.props;
 			hr {
 				border-top: 1px solid rgba(255, 255, 255, 0.08);
 			}
+			/* :global() is required below because this content comes from
+			   <Content /> rendered markdown, slotted in from [...slug].astro —
+			   Astro's scoped styles don't reach into slotted content, so an
+			   unprefixed selector here would silently no-op. */
+			:global(.prose hr) {
+				border: none;
+				border-top: 1px solid rgba(255, 255, 255, 0.08);
+				margin: 2em 0;
+			}
+			:global(.prose img) {
+				display: block;
+				margin: 2em auto;
+				border-radius: 12px;
+				border: 1px solid rgba(255, 255, 255, 0.08);
+				cursor: zoom-in;
+				transition: opacity 0.15s ease, border-color 0.15s ease;
+			}
+			:global(.prose img:hover) {
+				opacity: 0.9;
+				border-color: rgba(0, 240, 255, 0.3);
+			}
+			@media (min-width: 900px) {
+				:global(.prose img) {
+					width: 960px;
+					max-width: min(960px, 92vw);
+					margin-left: 50%;
+					transform: translateX(-50%);
+				}
+			}
+			#lightbox {
+				position: fixed;
+				inset: 0;
+				display: none;
+				align-items: center;
+				justify-content: center;
+				padding: clamp(1rem, 5vw, 3rem);
+				background: rgba(5, 5, 10, 0.92);
+				z-index: 2000;
+				cursor: zoom-out;
+			}
+			#lightbox.open {
+				display: flex;
+			}
+			#lightbox img {
+				max-width: 95vw;
+				max-height: 90vh;
+				border-radius: 8px;
+				border: 1px solid rgba(0, 240, 255, 0.2);
+				box-shadow: 0 0 40px rgba(0, 240, 255, 0.15);
+				cursor: default;
+			}
+			#lightbox-close {
+				position: absolute;
+				top: clamp(1rem, 3vw, 1.5rem);
+				right: clamp(1rem, 3vw, 1.5rem);
+				width: 2.5rem;
+				height: 2.5rem;
+				background: none;
+				border: 1px solid var(--text-dim);
+				border-radius: 4px;
+				color: var(--text);
+				font-family: var(--font-mono);
+				font-size: 1.2rem;
+				line-height: 1;
+				cursor: pointer;
+			}
+			#lightbox-close:hover,
+			#lightbox-close:focus-visible {
+				border-color: var(--cyan);
+				color: var(--cyan);
+			}
 		</style>
 	</head>
 
@@ -89,5 +160,49 @@ const { title, description, pubDate, updatedDate, heroImage } = Astro.props;
 			</article>
 		</main>
 		<Footer />
+		<div id="lightbox" role="dialog" aria-modal="true" aria-label="Enlarged image">
+			<button id="lightbox-close" type="button" aria-label="Close enlarged image">✕</button>
+			<img src="" alt="" />
+		</div>
+		<script>
+			const lightbox = document.getElementById('lightbox');
+			const lightboxImg = lightbox?.querySelector('img');
+			const closeButton = document.getElementById('lightbox-close');
+
+			function openLightbox(source: HTMLImageElement) {
+				if (!lightbox || !lightboxImg) return;
+				lightboxImg.src = source.currentSrc || source.src;
+				lightboxImg.alt = source.alt;
+				lightbox.classList.add('open');
+				closeButton?.focus();
+			}
+
+			function closeLightbox() {
+				if (!lightbox || !lightboxImg) return;
+				lightbox.classList.remove('open');
+				lightboxImg.src = '';
+			}
+
+			document.querySelectorAll<HTMLImageElement>('.prose img').forEach((img) => {
+				img.tabIndex = 0;
+				img.setAttribute('role', 'button');
+				img.setAttribute('aria-label', `Expand image: ${img.alt}`);
+				img.addEventListener('click', () => openLightbox(img));
+				img.addEventListener('keydown', (event) => {
+					if (event.key === 'Enter' || event.key === ' ') {
+						event.preventDefault();
+						openLightbox(img);
+					}
+				});
+			});
+
+			lightbox?.addEventListener('click', (event) => {
+				if (event.target === lightbox) closeLightbox();
+			});
+			closeButton?.addEventListener('click', closeLightbox);
+			document.addEventListener('keydown', (event) => {
+				if (event.key === 'Escape' && lightbox?.classList.contains('open')) closeLightbox();
+			});
+		</script>
 	</body>
 </html>
