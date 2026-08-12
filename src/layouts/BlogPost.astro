@@ -70,7 +70,10 @@ const { title, description, pubDate, updatedDate, heroImage } = Astro.props;
 			}
 			:global(.prose img) {
 				display: block;
-				margin: 2em auto;
+				width: min(960px, 92vw);
+				margin: 2em auto 0.5em;
+				margin-left: 50%;
+				transform: translateX(-50%);
 				border-radius: 12px;
 				border: 1px solid rgba(255, 255, 255, 0.08);
 				cursor: zoom-in;
@@ -80,13 +83,18 @@ const { title, description, pubDate, updatedDate, heroImage } = Astro.props;
 				opacity: 0.9;
 				border-color: rgba(0, 240, 255, 0.3);
 			}
-			@media (min-width: 900px) {
-				:global(.prose img) {
-					width: 960px;
-					max-width: min(960px, 92vw);
-					margin-left: 50%;
-					transform: translateX(-50%);
-				}
+			:global(.prose .expand-hint) {
+				display: block;
+				width: min(960px, 92vw);
+				margin: 0 auto 2em;
+				margin-left: 50%;
+				transform: translateX(-50%);
+				text-align: center;
+				font-family: var(--font-mono);
+				font-size: 0.75rem;
+				letter-spacing: 0.05em;
+				text-transform: uppercase;
+				color: var(--text-dim);
 			}
 			#lightbox {
 				position: fixed;
@@ -194,6 +202,11 @@ const { title, description, pubDate, updatedDate, heroImage } = Astro.props;
 						openLightbox(img);
 					}
 				});
+
+				const hint = document.createElement('span');
+				hint.className = 'expand-hint';
+				hint.textContent = 'Click to enlarge';
+				img.insertAdjacentElement('afterend', hint);
 			});
 
 			lightbox?.addEventListener('click', (event) => {
