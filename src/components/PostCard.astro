@@ -14,21 +14,22 @@ const formattedDate = `${date.getFullYear()}.${String(date.getMonth() + 1).padSt
 ).padStart(2, '0')}`;
 ---
 
-<article>
-	<a href={href} class="post-card">
-		<div class="post-date">{formattedDate}</div>
-		<div class="post-title">{title}</div>
-		<div class="post-excerpt">{excerpt}</div>
-		{
-			tags.length > 0 && (
-				<div class="post-tags">
-					{tags.map((tag) => (
-						<span class="tag">{tag}</span>
-					))}
-				</div>
-			)
-		}
-	</a>
+<article class="post-card">
+	<a href={href} class="card-link-overlay" aria-label={title}></a>
+	<div class="post-date">{formattedDate}</div>
+	<div class="post-title">{title}</div>
+	<div class="post-excerpt">{excerpt}</div>
+	{
+		tags.length > 0 && (
+			<div class="post-tags">
+				{tags.map((tag) => (
+					<a href={`/blog/tags/${tag}/`} class="tag">
+						{tag}
+					</a>
+				))}
+			</div>
+		)
+	}
 </article>
 
 <style>
@@ -39,9 +40,7 @@ const formattedDate = `${date.getFullYear()}.${String(date.getMonth() + 1).padSt
 		border: 1px solid rgba(255, 255, 255, 0.06);
 		clip-path: polygon(0 0, 100% 0, 100% 88%, 94% 100%, 0 100%);
 		transition: all 0.25s;
-		cursor: pointer;
 		position: relative;
-		text-decoration: none;
 		color: inherit;
 	}
 	.post-card:hover {
@@ -50,6 +49,12 @@ const formattedDate = `${date.getFullYear()}.${String(date.getMonth() + 1).padSt
 	}
 	.post-card:hover .post-title {
 		color: var(--cyan);
+	}
+	.card-link-overlay {
+		position: absolute;
+		inset: 0;
+		z-index: 1;
+		cursor: pointer;
 	}
 	.post-date {
 		font-family: var(--font-mono);
@@ -70,6 +75,8 @@ const formattedDate = `${date.getFullYear()}.${String(date.getMonth() + 1).padSt
 		line-height: 1.5;
 	}
 	.post-tags {
+		position: relative;
+		z-index: 2;
 		margin-top: 1rem;
 		display: flex;
 		gap: 0.5rem;
@@ -83,5 +90,12 @@ const formattedDate = `${date.getFullYear()}.${String(date.getMonth() + 1).padSt
 		padding: 0.15rem 0.5rem;
 		text-transform: uppercase;
 		letter-spacing: 0.05em;
+		text-decoration: none;
+		transition: color 0.2s, border-color 0.2s;
+	}
+	.tag:hover,
+	.tag:focus-visible {
+		color: var(--cyan);
+		border-color: var(--cyan);
 	}
 </style>

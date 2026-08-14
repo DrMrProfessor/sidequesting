@@ -2,6 +2,7 @@
 title: "Building the budgeting app I couldn't find"
 description: "Why I started building MicroBudget, a savings-first budgeting app for people whose brains don't work like a spreadsheet."
 pubDate: 'Aug 11 2026'
+tags: [python, app-development, personal-finance]
 ---
 
 I started MicroBudget for two reasons that eventually became one.

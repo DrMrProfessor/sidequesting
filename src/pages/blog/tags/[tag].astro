@@ -1,0 +1,92 @@
+---
+import { getCollection } from 'astro:content';
+import BaseHead from '../../../components/BaseHead.astro';
+import Footer from '../../../components/Footer.astro';
+import Header from '../../../components/Header.astro';
+import PostCard from '../../../components/PostCard.astro';
+import { SITE_TITLE } from '../../../consts';
+
+export async function getStaticPaths() {
+	const posts = await getCollection('blog');
+	const tags = [...new Set(posts.flatMap((post) => post.data.tags ?? []))];
+
+	return tags.map((tag) => ({
+		params: { tag },
+		props: {
+			posts: posts
+				.filter((post) => post.data.tags?.includes(tag))
+				.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()),
+		},
+	}));
+}
+
+const { tag } = Astro.params;
+const { posts } = Astro.props;
+---
+
+<!doctype html>
+<html lang="en-AU">
+	<head>
+		<BaseHead title={`#${tag} | ${SITE_TITLE}`} description={`Posts tagged #${tag}.`} />
+		<style>
+			main {
+				width: 1100px;
+			}
+			.section-label {
+				font-family: var(--font-mono);
+				font-weight: 400;
+				color: var(--yellow);
+				font-size: 0.8rem;
+				letter-spacing: 0.2em;
+				text-transform: uppercase;
+				margin-bottom: 2rem;
+				display: flex;
+				align-items: center;
+				gap: 1rem;
+			}
+			.section-label::after {
+				content: '';
+				flex: 1;
+				height: 1px;
+				background: rgba(255, 255, 255, 0.08);
+			}
+			.back-link {
+				display: inline-block;
+				margin-bottom: 1.5rem;
+				font-family: var(--font-mono);
+				font-size: 0.8rem;
+				color: var(--text-dim);
+				text-decoration: none;
+			}
+			.back-link:hover {
+				color: var(--cyan);
+			}
+			.post-grid {
+				display: grid;
+				grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+				gap: 1.5rem;
+			}
+		</style>
+	</head>
+	<body>
+		<Header />
+		<main id="main-content">
+			<a class="back-link" href="/blog/">&larr; All transmissions</a>
+			<h1 class="section-label">Tagged: #{tag}</h1>
+			<section class="post-grid">
+				{
+					posts.map((post) => (
+						<PostCard
+							href={`/blog/${post.id}/`}
+							date={post.data.pubDate}
+							title={post.data.title}
+							excerpt={post.data.description}
+							tags={post.data.tags}
+						/>
+					))
+				}
+			</section>
+		</main>
+		<Footer />
+	</body>
+</html>

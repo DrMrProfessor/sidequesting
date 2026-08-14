@@ -2,6 +2,7 @@
 title: "Little Did I Know: Catching My First Brute-Force"
 description: "I brute-forced my own homelab server to see what was behind an open SSH port — and found out my Wazuh setup had already caught me in the act."
 pubDate: 'Aug 13 2026'
+tags: [cybersecurity, homelab, wazuh, blue-team, ssh]
 ---
 
 There was one IP on the network, and it was answering on port 22.
