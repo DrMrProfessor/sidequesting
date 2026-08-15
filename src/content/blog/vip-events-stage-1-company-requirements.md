@@ -139,4 +139,4 @@ VIP Events should incorporate the following measures to secure Layer 0 against p
 
 ---
 
-*This is Stage 1 of a five-stage capstone. Stages 2–5 (Entra tenant setup, roles and access, application integration, and policy implementation) follow.*
+*This is Stage 1 of a five-stage capstone. [Stage 2](/blog/vip-events-stage-2-aad-setup/) (Entra tenant setup) follows, along with Stages 3–5 (roles and access, application integration, and policy implementation).*
