@@ -69,4 +69,4 @@ VIP Events now has a complete role-based access model: an integrated application
 
 ---
 
-*This is Stage 3 of a five-stage capstone. [Stage 1](/blog/vip-events-stage-1-company-requirements/) (company requirements) and [Stage 2](/blog/vip-events-stage-2-aad-setup/) (Entra ID setup) precede it; Stages 4 and 5 (connections and policy implementation) follow.*
+*This is Stage 3 of a five-stage capstone. [Stage 1](/blog/vip-events-stage-1-company-requirements/) (company requirements) and [Stage 2](/blog/vip-events-stage-2-aad-setup/) (Entra ID setup) precede it; [Stage 4](/blog/vip-events-stage-4-testing-validation/) (testing and validation) follows, along with Stage 5 (policy implementation).*

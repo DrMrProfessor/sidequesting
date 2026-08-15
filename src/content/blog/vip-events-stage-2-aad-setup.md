@@ -68,4 +68,4 @@ That's the identity and access foundation for VIP Events: one dedicated tenant (
 
 ---
 
-*This is Stage 2 of a five-stage capstone. [Stage 1](/blog/vip-events-stage-1-company-requirements/) (company requirements and network design) precedes it; [Stage 3](/blog/vip-events-stage-3-roles-and-access/) (roles and access) follows, along with Stages 4–5 (application integration and policy implementation).*
+*This is Stage 2 of a five-stage capstone. [Stage 1](/blog/vip-events-stage-1-company-requirements/) (company requirements and network design) precedes it; [Stage 3](/blog/vip-events-stage-3-roles-and-access/) (roles and access) follows, along with [Stage 4](/blog/vip-events-stage-4-testing-validation/) (testing and validation) and Stage 5 (policy implementation).*

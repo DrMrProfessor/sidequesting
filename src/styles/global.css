@@ -117,6 +117,14 @@ p {
 .prose p {
 	margin-bottom: 2em;
 }
+.prose table {
+	display: block;
+	overflow-x: auto;
+}
+.prose th,
+.prose td {
+	min-width: 9em;
+}
 textarea {
 	width: 100%;
 	font-size: 16px;
