@@ -115,4 +115,4 @@ This test plan validated the VIP Events identity solution end to end: authentica
 
 ---
 
-*This is Stage 4 of a five-stage capstone. [Stage 1](/blog/vip-events-stage-1-company-requirements/) (company requirements), [Stage 2](/blog/vip-events-stage-2-aad-setup/) (Entra ID setup), and [Stage 3](/blog/vip-events-stage-3-roles-and-access/) (roles and access) precede it; Stage 5 (policy implementation) follows.*
+*This is Stage 4 of a five-stage capstone. [Stage 1](/blog/vip-events-stage-1-company-requirements/) (company requirements), [Stage 2](/blog/vip-events-stage-2-aad-setup/) (Entra ID setup), and [Stage 3](/blog/vip-events-stage-3-roles-and-access/) (roles and access) precede it; [Stage 5](/blog/vip-events-stage-5-policy-implementation/) (policy implementation) follows — the final stage.*
